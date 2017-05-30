@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mejhwu.dao.FeedDao">
+    <resultMap id="Feed" type="cn.mejhwu.model.FeedDO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="data" jdbcType="VARCHAR" property="data"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+    </resultMap>
+    
+    <select id="listUserFeed" resultMap="Feed">
+        SELECT `id`, `type`, `user_id`, `data`, `created_date`
+        FROM `feed`
+        WHERE id &lt; #{maxId}
+        <if test="userIds != null and userIds.size() != 0">
+            AND `user_id` in (
+              <foreach collection="userIds" item="userId" separator=",">
+                  #{userId}
+              </foreach>
+            )
+        </if>
+        ORDER BY `id` DESC
+        LIMIT #{count}
+    </select>
+</mapper>

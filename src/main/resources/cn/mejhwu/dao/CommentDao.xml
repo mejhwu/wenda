@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mejhwu.dao.CommentDao">
+    <resultMap id="Comment" type="cn.mejhwu.model.CommentDO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="entity_id" jdbcType="INTEGER" property="entityId"/>
+        <result column="entity_type" jdbcType="INTEGER" property="entityType"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+    
+    <insert id="saveComment">
+        INSERT `comment`(`content`, `user_id`, `entity_id`, `entity_type`, `created_date`, `status`)
+        VALUES (#{content}, #{userId}, #{entityId}, #{entityType}, #{createdDate}, #{status})
+    </insert>
+
+    <select id="listCommentByEntity" resultMap="Comment">
+        SELECT `id`, `content`, `user_id`, `entity_id`, `entity_type`, `created_date`, `status`
+        FROM `comment`
+        WHERE `entity_id`=#{entityId} and `entity_type`=#{entityType} and `status`=0
+    </select>
+
+    <select id="countCommentByEntity" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM `comment`
+        WHERE `entity_id`=#{entityId} and `entity_type`=#{entityType} and `status`=0
+    </select>
+
+    <update id="updateCommentStatus" >
+        UPDATE `comment`
+        SET `status`=#{status}
+        WHERE `id`=#{id}
+    </update>
+
+    <select id="getCommentById" resultMap="Comment">
+        SELECT `id`, `content`, `user_id`, `entity_id`, `entity_type`, `created_date`, `status`
+        FROM `comment`
+        WHERE `id`=#{id}
+    </select>
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mejhwu.dao.LoginTicketDao">
+
+    <resultMap id="LoginTicket" type="cn.mejhwu.model.LoginTicketDO">
+        <id column="id" jdbcType="INTEGER" javaType="Integer" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="ticket" jdbcType="VARCHAR" property="ticket"/>
+        <result column="expired" jdbcType="TIMESTAMP" property="expired"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+
+    <insert id="addLoginTicket" >
+        INSERT `login_ticket`(`user_id`, `ticket`, `expired`, `status`)
+        VALUES (#{userId}, #{ticket}, #{expired}, #{status})
+    </insert>
+
+    <select id="getLoginTicketByTicket" resultMap="LoginTicket">
+        SELECT `id`, `user_id`, `ticket`, `expired`, `status`
+        FROM `login_ticket`
+        WHERE `ticket`=#{ticket}
+    </select>
+
+    <update id="updateLoginTicketStatus">
+        UPDATE `login_ticket`
+        SET `status`=#{status}
+        WHERE `ticket`=#{ticket}
+    </update>
+</mapper>

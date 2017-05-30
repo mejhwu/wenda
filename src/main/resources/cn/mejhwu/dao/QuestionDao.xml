@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.mejhwu.dao.QuestionDao">
+
+    <resultMap id="Question" type="cn.mejhwu.model.QuestionDO">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+        <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
+    </resultMap>
+    
+    
+    <insert id="saveQuestionDao" >
+        INSERT `question`(`title`, `content`, `user_id`, `created_date`, `comment_count`)
+        VALUES (#{title}, #{content}, #{userId}, #{createdDate}, #{commentCount})
+    </insert>
+
+    <select id="listQuestionOrderByDate" resultMap="Question">
+        SELECT `id`, `title`, `content`, `user_id`, `created_date`, `comment_count`
+        FROM `question`
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="getQuestionById" resultMap="Question">
+        SELECT `id`, `title`, `content`, `user_id`, `created_date`, `comment_count`
+        FROM `question`
+        WHERE `id`=#{id}
+    </select>
+
+</mapper>
