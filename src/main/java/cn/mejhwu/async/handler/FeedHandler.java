@@ -49,7 +49,7 @@ public class FeedHandler implements EventHandler {
         map.put("userHead", actor.getHeadUrl());
         map.put("userName", actor.getName());
         if (model.getType() == EventType.COMMENT) {
-            QuestionDO question = questionService.getQuestionById(model.getEntityId());
+            QuestionDO question = questionService.getQuestionById(model.getEntityOwnerId());
             if (question == null) {
                 return null;
             }
@@ -62,22 +62,19 @@ public class FeedHandler implements EventHandler {
 
     @Override
     public void doHandler(EventModel eventModel) {
-        Random random = new Random();
-        eventModel.setActorId(1 + random.nextInt());
-
 
         FeedDO feed = new FeedDO();
         feed.setCreatedDate(new Date());
-        feed.setUserId(eventModel.getActorId());
-        feed.setType(eventModel.getType().getValue());
+        feed.setActorId(eventModel.getActorId());
+        feed.setEntityType(eventModel.getEntityType());
+        feed.setEntityId(eventModel.getEntityId());
+        feed.setEntityOwnerId(eventModel.getEntityOwnerId());
         feed.setData(buildFeedData(eventModel));
         if (feed.getData() == null) {
             return ;
         }
 
         feedService.saveFeed(feed);
-
-
 
     }
 

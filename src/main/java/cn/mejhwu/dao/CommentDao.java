@@ -27,4 +27,8 @@ public interface CommentDao {
 
     CommentDO getCommentById(int id);
 
+    CommentDO getComment(@Param("userId") int userId,
+                         @Param("entityId") int entityId,
+                         @Param("entityType") int entityType);
+
 }

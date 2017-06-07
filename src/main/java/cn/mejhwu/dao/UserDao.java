@@ -23,4 +23,6 @@ public interface UserDao {
 
     int removeUserById(int id);
 
+    int updateLoginTime(int id);
+
 }

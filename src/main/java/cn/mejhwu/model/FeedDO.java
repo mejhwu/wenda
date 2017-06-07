@@ -13,8 +13,10 @@ import java.util.Date;
 public class FeedDO {
 
     private int id;
-    private int type;
-    private int userId;
+    private int entityId;
+    private int entityType;
+    private int actorId;
+    private int entityOwnerId;
     private Date createdDate;
     //JSON
     private String data;
@@ -27,20 +29,36 @@ public class FeedDO {
         this.id = id;
     }
 
-    public int getType() {
-        return type;
+    public int getEntityId() {
+        return entityId;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setEntityId(int entityId) {
+        this.entityId = entityId;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getEntityType() {
+        return entityType;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setEntityType(int entityType) {
+        this.entityType = entityType;
+    }
+
+    public int getActorId() {
+        return actorId;
+    }
+
+    public void setActorId(int actorId) {
+        this.actorId = actorId;
+    }
+
+    public int getEntityOwnerId() {
+        return entityOwnerId;
+    }
+
+    public void setEntityOwnerId(int entityOwnerId) {
+        this.entityOwnerId = entityOwnerId;
     }
 
     public Date getCreatedDate() {
@@ -57,5 +75,18 @@ public class FeedDO {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "FeedDO{" +
+                "id=" + id +
+                ", entityId=" + entityId +
+                ", entityType=" + entityType +
+                ", actorId=" + actorId +
+                ", entityOwnerId=" + entityOwnerId +
+                ", createdDate=" + createdDate +
+                ", data='" + data + '\'' +
+                '}';
     }
 }

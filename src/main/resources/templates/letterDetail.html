@@ -43,7 +43,7 @@
                             <p class="letter-time" th:text="${#dates.format(vo.message.createdDate, 'yyyy-MM-dd HH:mm')}">今天 15:28</p>
                             <!--<a href="javascript:void(0);" id="del-link" name="4009580">删除</a>-->
                         </div>
-                        <p class="chat-content" th:text="${vo.message.content}">
+                        <p class="chat-content" th:utext="${vo.message.content}">
                         你收藏的问题<a class="msg-view-all"
                                  href="/questionTerminal/abc3fe2ce8e146608e868a70efebf62e?toCommentId=141625">"二维数组中的查找"</a>
                         有了新的回答，去看看对自己是否有用吧。（不想再收到此类提醒？<a class="msg-view-all"

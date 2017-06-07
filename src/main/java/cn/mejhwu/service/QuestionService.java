@@ -21,4 +21,11 @@ public interface QuestionService {
     List<UserQuestionVO> listQuestionOrderByDate(int offset, int limit);
 
     QuestionDO getQuestionById(int id);
+
+
+    List<QuestionDO> listQuestionByUserId(int userId, int offset, int limit);
+    List<UserQuestionVO> listQuestionAndUserByUserId(int userId, int offset, int limit);
+
+    int updateCommentCount(int questionId, int commentCount);
+
 }

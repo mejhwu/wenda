@@ -52,6 +52,8 @@ public class LikeController {
         eventModel.setType(EventType.LIKE).setActorId(hostHolder.getUser().getId());
         eventModel.setEntityId(commentId).setEntityType(EntityType.ENTITY_COMMENT);
         eventModel.setEntityOwnerId(comment.getUserId());
+
+        eventModel.setExt("questionId", String.valueOf(comment.getEntityId()));
         eventProducer.fireEvent(eventModel);
 
         long likeCount = likeService.like(hostHolder.getUser().getId(),

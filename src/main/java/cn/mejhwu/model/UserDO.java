@@ -1,5 +1,7 @@
 package cn.mejhwu.model;
 
+import java.util.Date;
+
 /**
  * Created with IntelliJ IDEA.
  * Author: mejhwu
@@ -14,6 +16,7 @@ public class UserDO {
     private String password;
     private String salt;
     private String headUrl;
+    private Date lastLoginTime;
 
     public int getId() {
         return id;
@@ -53,6 +56,14 @@ public class UserDO {
 
     public void setHeadUrl(String headUrl) {
         this.headUrl = headUrl;
+    }
+
+    public Date getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void setLastLoginTime(Date lastLoginTime) {
+        this.lastLoginTime = lastLoginTime;
     }
 
     @Override

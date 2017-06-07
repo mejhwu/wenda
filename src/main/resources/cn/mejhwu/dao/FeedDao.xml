@@ -5,14 +5,16 @@
 <mapper namespace="cn.mejhwu.dao.FeedDao">
     <resultMap id="Feed" type="cn.mejhwu.model.FeedDO">
         <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="type" jdbcType="INTEGER" property="type"/>
-        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="entity_id" jdbcType="INTEGER" property="entityId" />
+        <result column="entity_type" jdbcType="INTEGER" property="entityType"/>
+        <result column="actor_id" jdbcType="INTEGER" property="actorId"/>
+        <result column="entity_owner_id" jdbcType="INTEGER" property="entityOwnerId" />
         <result column="data" jdbcType="VARCHAR" property="data"/>
         <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
     </resultMap>
     
-    <select id="listUserFeed" resultMap="Feed">
-        SELECT `id`, `type`, `user_id`, `data`, `created_date`
+<!--    <select id="listUserFeed" resultMap="Feed">
+        SELECT `id`, `entity_id`, `entity_type`, `actor_id`, `entity_owner_id`, `data`, `created_date`
         FROM `feed`
         WHERE id &lt; #{maxId}
         <if test="userIds != null and userIds.size() != 0">
@@ -22,7 +24,20 @@
               </foreach>
             )
         </if>
-        ORDER BY `id` DESC
+        ORDER BY `created_date` DESC
         LIMIT #{count}
+    </select>-->
+
+    <select id="listFeed" resultMap="Feed">
+        SELECT `id`, `entity_id`, `entity_type`, `actor_id`, `entity_owner_id`, `data`, `created_date`
+        FROM `feed`
+        WHERE `entity_type`=#{entityType}
+        <if test="entityOwnerIds != null and entityOwnerIds.size() != 0">
+            AND `entity_owner_id` in (
+            <foreach collection="entityOwnerIds" item="entityOwnerId" separator=",">
+                #{entityOwnerId}
+            </foreach>
+            )
+        </if>
     </select>
 </mapper>

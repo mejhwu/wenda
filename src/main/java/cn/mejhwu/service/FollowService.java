@@ -1,5 +1,7 @@
 package cn.mejhwu.service;
 
+import cn.mejhwu.model.UserDO;
+
 import java.util.List;
 
 /**
@@ -30,4 +32,8 @@ public interface FollowService {
     long getFollowerCount(int entityId, int entityType);
 
     boolean isFollower(int userId, int entityId, int entityType);
+
+    List<UserDO> followers(int id);
+
+    List<UserDO> followees(int id);
 }

@@ -112,6 +112,7 @@ public class UserServiceImpl implements UserService {
         }
         String ticket = addLoginTicket(user.getId());
         map.put("ticket", ticket);
+        userDao.updateLoginTime(user.getId());
         return map;
     }
 
@@ -139,5 +140,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDO getUserByName(String name) {
         return userDao.getUserByName(name);
+    }
+
+    @Override
+    public int updateLoginTime(int id) {
+        return userDao.updateLoginTime(id);
     }
 }

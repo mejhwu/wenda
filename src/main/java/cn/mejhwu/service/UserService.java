@@ -23,4 +23,6 @@ public interface UserService {
     UserDO getUserById(int id);
 
     UserDO getUserByName(String name);
+
+    int updateLoginTime(int id);
 }

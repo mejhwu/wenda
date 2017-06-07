@@ -14,7 +14,42 @@
         <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
     </resultMap>
     
+    <resultMap id="UserQuestion" type="cn.mejhwu.vo.UserQuestionVO">
+        <association property="question" javaType="cn.mejhwu.model.QuestionDO">
+            <id column="question_id" jdbcType="INTEGER" property="id"/>
+            <result column="title" jdbcType="VARCHAR" property="title"/>
+            <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+            <result column="user_id" jdbcType="INTEGER" property="userId"/>
+            <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
+            <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
+        </association>
+        <association property="user" javaType="cn.mejhwu.model.UserDO">
+            <id column="user_id" jdbcType="INTEGER" property="id"/>
+            <result column="name" jdbcType="VARCHAR" property="name"/>
+            <result column="password" jdbcType="VARCHAR" property="password"/>
+            <result column="salt" jdbcType="VARCHAR" property="salt"/>
+            <result column="head_url" jdbcType="VARCHAR" property="headUrl"/>
+        </association>
+    </resultMap>
     
+    <select id="listQuestionAndUserByUserId" resultMap="UserQuestion">
+        SELECT c.`id` AS question_id, c.`title`, c.`content`, c.`user_id`, c.`created_date`, c.`comment_count`,
+              u.`id` AS user_id, u.`name`, u.`password`, u.`salt`, u.`head_url`
+        FROM `question` c JOIN `user` u
+        ON c.`user_id` = u.`id`
+        WHERE c.`user_id`=#{userId}
+        ORDER BY c.`created_date` DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="listQuestionByUserId" resultMap="Question">
+        SELECT `id`, `title`, `content`, `user_id`, `created_date`, `comment_count`
+        FROM `question`
+        WHERE `user_id`=#{userId}
+        ORDER BY `created_date` DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
     <insert id="saveQuestionDao" >
         INSERT `question`(`title`, `content`, `user_id`, `created_date`, `comment_count`)
         VALUES (#{title}, #{content}, #{userId}, #{createdDate}, #{commentCount})
@@ -23,6 +58,7 @@
     <select id="listQuestionOrderByDate" resultMap="Question">
         SELECT `id`, `title`, `content`, `user_id`, `created_date`, `comment_count`
         FROM `question`
+        ORDER BY `created_date` DESC
         LIMIT #{offset}, #{limit}
     </select>
 
@@ -31,5 +67,11 @@
         FROM `question`
         WHERE `id`=#{id}
     </select>
+
+    <update id="updateCommentCount" >
+        UPDATE `question`
+        SET `comment_count`=#{commentCount}
+        WHERE `id`=#{questionId}
+    </update>
 
 </mapper>

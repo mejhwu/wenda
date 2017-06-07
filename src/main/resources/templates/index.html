@@ -32,9 +32,9 @@
                 <div class="zg-section" id="zh-home-list-title">
                     <i class="zg-icon zg-icon-feedlist"></i>最新动态
                     <input type="hidden" id="is-topstory">
-                    <span class="zg-right zm-noti-cleaner-setting" style="list-style:none">
+<!--                    <span class="zg-right zm-noti-cleaner-setting" style="list-style:none">
                         <a href="https://nowcoder.com/settings/filter" class="zg-link-gray-normal">
-                            <i class="zg-icon zg-icon-settings"></i>设置</a></span>
+                            <i class="zg-icon zg-icon-settings"></i>设置</a></span>-->
                 </div>
                 <div class="zu-main-feed-con navigable" data-feedtype="topstory" id="zh-question-list" data-widget="navigable" data-navigable-options="{&quot;items&quot;:&quot;&gt; .zh-general-list .feed-content&quot;,&quot;offsetTop&quot;:-82}">
                     <a href="javascript:;" class="zu-main-feed-fresh-button" id="zh-main-feed-fresh-button" style="display:none"></a>
@@ -59,8 +59,8 @@
                                             <div class="question-description-plain zm-editable-content"></div>
                                         </div>
                                         <div class="expandable entry-body">
-                                            <div class="zm-item-vote">
-                                                <a class="zm-item-vote-count js-expand js-vote-count" href="javascript:;" data-bind-votecount="">4168</a></div>
+                                            <!--<div class="zm-item-vote">
+                                                <a class="zm-item-vote-count js-expand js-vote-count" href="javascript:;" data-bind-votecount="">4168</a></div>-->
                                             <div class="zm-item-answer-author-info" >
                                                 <a class="author-link" data-tip="p$b$amuro1230" target="_blank" th:href="@{'/user/' + ${vo.user.id}}" th:text="${vo.user.name}"></a>
                                                 , <span th:text="${#dates.format(vo.question.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
@@ -78,9 +78,12 @@
                                             <div class="zm-item-meta answer-actions clearfix js-contentActions">
                                                 <div class="zm-meta-panel">
                                                     <a data-follow="q:link" class="follow-link zg-follow meta-item" href="javascript:;" id="sfb-123114">
-                                                        <i class="z-icon-follow"></i>关注问题</a>
-                                                    <a href="#" name="addcomment" class="meta-item toggle-comment js-toggleCommentBox" th:text="${vo.commentCount} + '条评论'">
-                                                        <i class="z-icon-comment"></i></a>
+                                                        <i class="z-icon-follow"></i>
+                                                        <span th:if="${vo.followed == true}" th:attr="data-id=${vo.question.id}">取消关注</span>
+                                                        <span th:if="${vo.followed == null || vo.followed == false}"  th:attr="data-id=${vo.question.id}">关注问题</span>
+                                                    </a>
+                                                    <a href="#" name="addcomment" class="meta-item toggle-comment js-toggleCommentBox" >
+                                                        <i class="z-icon-comment"></i> <span th:text="${vo.commentCount} + '条评论'"></span></a>
 
 
                                                     <button class="meta-item item-collapse js-collapse">
@@ -99,8 +102,6 @@
             </div>
         </div>
     </div>
-    <script src="../scripts/jquery.min.js"></script>
-    <script src="../scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="../scripts/main/jquery.js"></script>
     <script type="text/javascript" src="../scripts/main/base/base.js"></script>
     <script type="text/javascript" src="../scripts/main/base/util.js"></script>
@@ -110,5 +111,40 @@
     <script type="text/javascript" src="../scripts/main/component/popupAdd.js"></script>
     <script type="text/javascript" src="../scripts/main/component/popupMsg.js"></script>
     <script type="text/javascript" src="../scripts/main/site/home.js"></script>
+    <script>
+        $(function () {
+           $('.follow-link').on('click', function () {
+               var $s = $(this).children('span');
+               var data = {
+                   "questionId" : $s.attr('data-id')
+               }
+               console.log(data); //TODO
+               var url = null;
+               if ($s.html().trim() == '关注问题') {
+                   url = '/followQuestion';
+               } else {
+                   url = '/unfollowQuestion';
+               }
+
+               $.ajax({
+                   url : url,
+                   type : 'post',
+                   data : data,
+                   success : function (dat) {
+                       var json = JSON.parse(dat);
+                       console.log(json); //TODO
+                       console.log(json.code); //TODO
+                       if (json.code == 0) {
+                           if ($s.html().trim() == '关注问题') {
+                               $s.html('取消关注');
+                           } else {
+                               $s.html('关注问题');
+                           }
+                       }
+                   }
+               });
+           });
+        });
+    </script>
 </body>
 </html>

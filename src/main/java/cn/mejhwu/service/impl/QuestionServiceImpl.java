@@ -1,10 +1,12 @@
 package cn.mejhwu.service.impl;
 
 import cn.mejhwu.bo.EntityType;
+import cn.mejhwu.bo.HostHolder;
 import cn.mejhwu.dao.QuestionDao;
 import cn.mejhwu.dao.UserDao;
 import cn.mejhwu.model.QuestionDO;
 import cn.mejhwu.service.CommentService;
+import cn.mejhwu.service.FollowService;
 import cn.mejhwu.service.QuestionService;
 import cn.mejhwu.service.SensitivieService;
 import cn.mejhwu.vo.UserQuestionVO;
@@ -43,6 +45,12 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     CommentService commentService;
 
+    @Autowired
+    FollowService followService;
+
+    @Autowired
+    HostHolder hostHolder;
+
     @Override
     public int add(QuestionDO question) {
         //敏感词过滤
@@ -64,6 +72,10 @@ public class QuestionServiceImpl implements QuestionService {
             vo.setUser(userDao.getUserById(question.getUserId()));
             vo.setCommentCount(commentService.countCommentByEntity(
                     question.getId(), EntityType.ENTITY_QUESTION));
+            if (hostHolder.getUser() != null) {
+                vo.setFollowed(followService.isFollower(
+                        hostHolder.getUser().getId(), question.getId(), EntityType.ENTITY_QUESTION));
+            }
             vos.add(vo);
         }
         return vos;
@@ -72,5 +84,19 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public QuestionDO getQuestionById(int id) {
         return questionDao.getQuestionById(id);
+    }
+
+    @Override
+    public List<QuestionDO> listQuestionByUserId(int userId, int offset, int limit) {
+        return questionDao.listQuestionByUserId(userId, offset, limit);
+    }
+
+    @Override
+    public List<UserQuestionVO> listQuestionAndUserByUserId(int userId, int offset, int limit) {
+        return questionDao.listQuestionAndUserByUserId(userId, offset, limit);
+    }
+    @Override
+    public int updateCommentCount(int questionId, int commentCount) {
+        return questionDao.updateCommentCount(questionId, commentCount);
     }
 }

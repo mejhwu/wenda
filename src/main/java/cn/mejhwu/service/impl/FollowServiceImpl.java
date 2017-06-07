@@ -1,12 +1,17 @@
 package cn.mejhwu.service.impl;
 
+import cn.mejhwu.bo.EntityType;
+import cn.mejhwu.dao.UserDao;
+import cn.mejhwu.model.UserDO;
 import cn.mejhwu.service.FollowService;
 import cn.mejhwu.util.JedisAdapter;
 import cn.mejhwu.util.RedisKeyUtil;
+import cn.mejhwu.util.WendaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Entity;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
@@ -31,6 +36,9 @@ public class FollowServiceImpl implements FollowService {
 
     @Autowired
     JedisAdapter jedisAdapter;
+
+    @Autowired
+    UserDao userDao;
 
     @Override
     public boolean follow(int userId, int entityId, int entityType) {
@@ -90,7 +98,7 @@ public class FollowServiceImpl implements FollowService {
 
     public long getFolloweeCount(int userId, int entityType) {
         String followeeKey = RedisKeyUtil.getFolloweeKey(userId, entityType);
-        return jedisAdapter.scard(followeeKey);
+        return jedisAdapter.zcard(followeeKey);
     }
     @Override
     public long getFollowerCount(int entityId, int entityType) {
@@ -109,6 +117,40 @@ public class FollowServiceImpl implements FollowService {
             ids.add(Integer.parseInt(str));
         }
         return ids;
+    }
+
+    @Override
+    public List<UserDO> followers(int id) {
+
+        String followerKey = RedisKeyUtil.getFollowerKey(id, EntityType.ENTITY_USER);
+
+        return listUsers(followerKey);
+    }
+
+    @Override
+    public List<UserDO> followees(int id) {
+        String followeeKey = RedisKeyUtil.getFolloweeKey(id, EntityType.ENTITY_USER);
+        return listUsers(followeeKey);
+    }
+
+    private List<UserDO> listUsers(String key) {
+
+        Set<String> followerUserIds = jedisAdapter.zrevrange(key, 0, 10);
+        List<UserDO> followerUsers = new ArrayList<>();
+
+        int userId = 0;
+        UserDO user;
+
+        for (String str : followerUserIds) {
+            userId = Integer.parseInt(str);
+            user = userDao.getUserById(userId);
+            if (user == null) {
+                continue;
+            }
+            followerUsers.add(user);
+        }
+
+        return followerUsers;
     }
 
 }

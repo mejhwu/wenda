@@ -10,22 +10,23 @@
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="salt" jdbcType="VARCHAR" property="salt"/>
         <result column="head_url" jdbcType="VARCHAR" property="headUrl"/>
+        <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
     </resultMap>
 
     <insert id="addUser">
-        INSERT `user`(`name`, `password`, `salt`, `head_url`)
-        VALUES (#{name}, #{password}, #{salt}, #{headUrl})
+        INSERT `user`(`name`, `password`, `salt`, `head_url`, `last_login_time`)
+        VALUES (#{name}, #{password}, #{salt}, #{headUrl}, CURRENT_TIMESTAMP )
     </insert>
 
     <select id="getUserById" resultMap="User">
-        SELECT `id`, `name`, `password`, `salt`, `head_url`
+        SELECT `id`, `name`, `password`, `salt`, `head_url`, `last_login_time`
         FROM `user`
         WHERE `id`=#{id}
     </select>
 
 
     <select id="getUserByName" resultMap="User">
-        SELECT `id`, `name`, `password`, `salt`, `head_url`
+        SELECT `id`, `name`, `password`, `salt`, `head_url`, `last_login_time`
         FROM `user`
         WHERE `name`=#{name}
     </select>
@@ -40,4 +41,10 @@
         DELETE FROM `user`
         WHERE `id`=#{id}
     </delete>
+
+    <update id="updateLoginTime" >
+        UPDATE `user`
+        SET  `last_login_time`=CURRENT_TIMESTAMP
+        WHERE `id`=#{id}
+    </update>
 </mapper>

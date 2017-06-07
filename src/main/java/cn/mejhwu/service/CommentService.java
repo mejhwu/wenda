@@ -17,10 +17,14 @@ public interface CommentService {
 
     List<CommentDO> listCommentByEntity(int entityId, int entityType);
 
-    int saveComment(CommentDO comment);
+    int saveComment(int questionID, CommentDO comment);
 
     int countCommentByEntity(int entityId, int entityType);
 
     int removeCommentById(int id);
+
     CommentDO getCommentById(int id);
+
+    CommentDO getComment(int userId, int entityId, int entityType);
+
 }

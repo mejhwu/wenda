@@ -6,10 +6,7 @@ import cn.mejhwu.dao.UserDao;
 import cn.mejhwu.model.CommentDO;
 import cn.mejhwu.model.QuestionDO;
 import cn.mejhwu.model.UserDO;
-import cn.mejhwu.service.CommentService;
-import cn.mejhwu.service.FollowService;
-import cn.mejhwu.service.QuestionService;
-import cn.mejhwu.service.UserService;
+import cn.mejhwu.service.*;
 import cn.mejhwu.util.WendaUtils;
 import cn.mejhwu.vo.UserCommentVO;
 import org.slf4j.Logger;
@@ -57,6 +54,9 @@ public class QuestionController {
     @Autowired
     FollowService followService;
 
+    @Autowired
+    LikeService likeService;
+
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public String addQuestion(String title, String content) {
@@ -91,8 +91,11 @@ public class QuestionController {
         UserDO questionUser = userService.getUserById(question.getUserId());
         model.addAttribute("user", questionUser);
         model.addAttribute("followerCount", followService.getFollowerCount(qid, EntityType.ENTITY_QUESTION));
-        model.addAttribute("isFollow", followService.isFollower(
-                hostHolder.getUser().getId(), qid, EntityType.ENTITY_QUESTION));
+        if (hostHolder.getUser() != null) {
+            model.addAttribute("isFollow", followService.isFollower(
+                    hostHolder.getUser().getId(), qid, EntityType.ENTITY_QUESTION));
+        }
+
         List<CommentDO> commentList = commentService.listCommentByEntity(qid, EntityType.ENTITY_QUESTION);
         List<UserCommentVO> comments = new ArrayList<>();
 
@@ -101,6 +104,7 @@ public class QuestionController {
             UserCommentVO vo = new UserCommentVO();
             vo.setUser(commentUser);
             vo.setComment(comment);
+            vo.setLikeCount((int)likeService.countLike(comment.getId(), EntityType.ENTITY_COMMENT));
             comments.add(vo);
         }
         model.addAttribute("comments", comments);

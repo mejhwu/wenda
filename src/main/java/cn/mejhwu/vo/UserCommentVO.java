@@ -15,6 +15,15 @@ public class UserCommentVO {
     private UserDO user;
     private CommentDO comment;
     private int commentCount;
+    private int likeCount;
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
 
     public int getCommentCount() {
         return commentCount;

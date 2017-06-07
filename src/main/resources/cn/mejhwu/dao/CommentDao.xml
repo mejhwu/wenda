@@ -13,7 +13,7 @@
         <result column="status" jdbcType="INTEGER" property="status"/>
     </resultMap>
     
-    <insert id="saveComment">
+    <insert id="saveComment" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         INSERT `comment`(`content`, `user_id`, `entity_id`, `entity_type`, `created_date`, `status`)
         VALUES (#{content}, #{userId}, #{entityId}, #{entityType}, #{createdDate}, #{status})
     </insert>
@@ -22,6 +22,7 @@
         SELECT `id`, `content`, `user_id`, `entity_id`, `entity_type`, `created_date`, `status`
         FROM `comment`
         WHERE `entity_id`=#{entityId} and `entity_type`=#{entityType} and `status`=0
+        ORDER BY `created_date`
     </select>
 
     <select id="countCommentByEntity" resultType="java.lang.Integer">
@@ -40,5 +41,11 @@
         SELECT `id`, `content`, `user_id`, `entity_id`, `entity_type`, `created_date`, `status`
         FROM `comment`
         WHERE `id`=#{id}
+    </select>
+
+    <select id="getComment">
+        SELECT `id`, `content`, `user_id`, `entity_id`, `entity_type`, `created_date`, `status`
+        FROM `comment`
+        WHERE `user_id`=#{userId} AND `entity_id`=#{entityId} AND `entity_type`=#{entityType}
     </select>
 </mapper>

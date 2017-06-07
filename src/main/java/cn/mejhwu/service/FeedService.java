@@ -1,6 +1,7 @@
 package cn.mejhwu.service;
 
 import cn.mejhwu.model.FeedDO;
+import cn.mejhwu.vo.ViewObjectVO;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface FeedService {
     boolean saveFeed(FeedDO feed);
 
     FeedDO getFeedById(int id);
+
+    List<ViewObjectVO> timeline(int userId);
 }

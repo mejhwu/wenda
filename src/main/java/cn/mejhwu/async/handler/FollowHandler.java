@@ -27,7 +27,7 @@ import java.util.List;
  */
 
 @Component
-public class LikeHandler implements EventHandler {
+public class FollowHandler implements EventHandler {
 
     @Autowired
     MessageService messageService;
@@ -46,12 +46,8 @@ public class LikeHandler implements EventHandler {
         message.setCreatedDate(new Date());
 
         UserDO user = userService.getUserById(eventModel.getActorId());
-        QuestionDO question =  questionService.getQuestionById(
-                        Integer.parseInt(eventModel.getExt("questionId")));
         message.setContent("用户<a href=\"/user/" + user.getId() + "\">" +
-                            user.getName() + "</a>赞了你的评论" +
-                            "请前往<a href=\"/question/" + question.getId() +
-                            "\">" + question.getTitle() + "</a>查看");
+                            user.getName() + "</a>关注了你");
         message.setConversationId();
         message.setHasRead(1);
         messageService.saveMessage(message);
@@ -59,6 +55,6 @@ public class LikeHandler implements EventHandler {
 
     @Override
     public List<EventType> getSupportEventType() {
-        return Arrays.asList(EventType.LIKE);
+        return Arrays.asList(EventType.FOLLOW);
     }
 }

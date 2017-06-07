@@ -65,7 +65,7 @@
                     <p class="letter-brief">
                         <a th:href="@{'/msg/detail?conversationId=' + ${conversation.get('message').conversationId}}"
                            href="msg-list?conversationId=10005_622873&amp;updateRead=1&amp;msgType=1"
-                           th:text="${conversation.get('message').content}" >
+                           th:utext="${conversation.get('message').content}" >
                             你收藏的问题"二维数组中的查找" 有了新的回答，去看看对自己是否有用吧。（不想再收到此类提醒？点击设置 ）
                         </a>
                     </p>

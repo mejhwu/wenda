@@ -58,12 +58,13 @@ public class CommentController {
             comment.setEntityType(EntityType.ENTITY_QUESTION);
             comment.setEntityId(questionId);
             comment.setStatus(0);
-            commentService.saveComment(comment);
+            commentService.saveComment(questionId, comment);
 
             //发出评论事件
             EventModel model = new EventModel();
             model.setType(EventType.COMMENT).setActorId(hostHolder.getUser().getId());
-            model.setEntityId(questionId).setEntityType(EntityType.ENTITY_QUESTION);
+            model.setEntityId(comment.getId()).setEntityType(EntityType.ENTITY_COMMENT);
+            model.setEntityOwnerId(questionId);
             eventProducer.fireEvent(model);
 
         } catch (Exception e) {

@@ -18,6 +18,15 @@ public class UserQuestionVO {
     private QuestionDO question;
     private UserDO user;
     private int commentCount;
+    private boolean followed;
+
+    public boolean isFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(boolean followed) {
+        this.followed = followed;
+    }
 
     public int getCommentCount() {
         return commentCount;
